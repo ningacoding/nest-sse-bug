@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+Data events:<br/>
+<div id="result"></div>
+<hr/>
+Errors:<br/>
+<div id="errors"></div>
+<hr/>
+Create parallel event:<br/>
+
+<form id="form" action="/emit" method="post">
+    <input type="submit" value="EMIT EVENT">
+</form>
+
+<script type="text/javascript">
+  const subscription = new EventSource(`/events/`);
+  subscription.onmessage = (message) => {
+    document.getElementById("result").innerHTML += message.data + "<br/>";
+  };
+  subscription.onerror = (message) => {
+    document.getElementById("errors").innerHTML += message + "<br/>";
+  };
+
+  function formSubmit(event) {
+    const url = "/emit/";
+    const request = new XMLHttpRequest();
+    request.open('POST', url, true);
+    request.onload = function () {
+      console.log(request.responseText);
+    };
+    request.onerror = function () {
+      // request failed
+    };
+    request.send(new FormData(event.target)); // create FormData from form that triggered event
+    event.preventDefault();
+  }
+
+  document.getElementById("form").addEventListener("submit", formSubmit);
+</script>
+
+</body>
+</html>
