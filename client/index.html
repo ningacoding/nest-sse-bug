@@ -13,34 +13,31 @@ Errors:<br/>
 <hr/>
 Create parallel event:<br/>
 
-<form id="form" action="/emit" method="post">
-    <input type="submit" value="EMIT EVENT">
+<form id="form1">
+    <input type="submit" value="EMIT EVENT (THIS WORKS)">
 </form>
 
 <script type="text/javascript">
-  const subscription = new EventSource(`/events/`);
+  const subscription = new EventSource(`/api/events/`);
   subscription.onmessage = (message) => {
     document.getElementById("result").innerHTML += message.data + "<br/>";
   };
   subscription.onerror = (message) => {
-    document.getElementById("errors").innerHTML += message + "<br/>";
+    document.getElementById("errors").innerHTML += JSON.stringify(message) + "<br/>";
   };
 
   function formSubmit(event) {
-    const url = "/emit/";
+    const url = "/api/emit/";
     const request = new XMLHttpRequest();
     request.open('POST', url, true);
     request.onload = function () {
       console.log(request.responseText);
     };
-    request.onerror = function () {
-      // request failed
-    };
-    request.send(new FormData(event.target)); // create FormData from form that triggered event
+    request.send(new FormData(event.target));
     event.preventDefault();
   }
 
-  document.getElementById("form").addEventListener("submit", formSubmit);
+  document.getElementById("form1").addEventListener("submit", formSubmit);
 </script>
 
 </body>

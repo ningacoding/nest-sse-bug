@@ -1,5 +1,5 @@
-import {Controller, Get, Post, Sse} from '@nestjs/common';
-import {EventsService} from './events.service';
+import {Controller, Post, Request, Sse} from '@nestjs/common';
+import {EventsService} from "./events.service";
 
 @Controller()
 export class AppController {
@@ -8,13 +8,16 @@ export class AppController {
     }
 
     @Sse('events')
-    events() {
+    events(
+        @Request() req,
+    ) {
         return this.eventsService.subscribe();
     }
 
     @Post('emit')
-    emit() {
-        return this.eventsService.emit('event emit!! at ' + new Date().toISOString());
+    async emit() {
+        this.eventsService.emit({emitting: new Date().toISOString()});
+        return {ok: true};
     }
 
 }
