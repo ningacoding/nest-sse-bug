@@ -7,7 +7,9 @@ export class EventsService {
 
     private readonly emitter: EventEmitter;
 
-    constructor() {
+    constructor(
+        // Inject some Service here and everything about SSE will stop to work.
+    ) {
         this.emitter = new EventEmitter();
     }
 
@@ -16,7 +18,7 @@ export class EventsService {
     }
 
     async emit(data) {
-        this.emitter.emit('eventName', data);
+        this.emitter.emit('eventName', {data});
     }
 
 }
